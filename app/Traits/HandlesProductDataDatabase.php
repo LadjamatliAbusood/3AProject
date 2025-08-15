@@ -67,6 +67,8 @@ trait HandlesProductDataDatabase
         ->paginate(50)
         ->withQueryString();
 
+    
+
     return [
         'Product' => $Product,
         'Suppliers' => $Suppliers,

@@ -129,7 +129,8 @@ public function storeexpenses(Request $request, $branch)
     ExpensesModel::create($fields);
 
     return back()->with('success', 'Expenses Added Successfully');
-}public function receive(Request $request, $branch)
+}
+public function receive(Request $request, $branch)
 {
     // 🔍 Fetch branch info
     $branchModel = AddBranchModel::where('branch_name', $branch)->first();

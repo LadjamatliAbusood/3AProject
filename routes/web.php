@@ -175,6 +175,9 @@ Route::post('/supervisor/{branch}/expenses', [SupervisorController::class, 'stor
     //login as cashier
 Route::get('/cashier/{branch}', [CashierController::class, 'index'])->name('cashier');
 Route::get('/cashier/{branch}/view', [CashierController::class, 'viewproduct'])->name('viewproduct');
+Route::get('/cashier/{branch}/expenses', [CashierController::class, 'exp'])->name('cashierexp');
+Route::post('/cashier/{branch}/expenses', [CashierController::class, 'storeexp'])->name('cashier.storeexp');
+Route::get('/cashier/{branch}/sales', [CashierController::class, 'sales'])->name('sales');
 // Route::get('/cashier/{branch}/receipt', [CashierController::class, 'receipt'])->name('receipt');
 
 

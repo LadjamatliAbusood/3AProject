@@ -24,7 +24,7 @@ const HeaderHomeUrl = (() => {
             >
                 ☰
             </button>
-            <h1 class="text-xl font-bold text-gray-500">3A Merchandiser |</h1>
+            <h1 class="text-xl font-bold text-gray-500">A&A Merchandiser |</h1>
             <Link
                 :href="HeaderHomeUrl"
                 class="text-xl px-2 py-1 text-gray-500 rounded hover:bg-gray-200"

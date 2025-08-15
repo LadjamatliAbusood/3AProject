@@ -5,65 +5,27 @@ import ExportTable from "../Components/ExportTable.vue";
 import CardView from "../Components/CardView.vue";
 import DateRangeFilter from "../Components/DateRangeFilter.vue";
 import PaginationLinks from "../Components/PaginationLink.vue";
-import SelectInput from "../Components/SelectInput.vue";
+
+import CashierLayout from "../../Layouts/CashierLayout.vue";
+
+defineOptions({ layout: CashierLayout });
 
 const page = usePage();
-const acct_roles = page.props.auth?.user?.acct_roles;
-const branch = page.props.auth?.user?.branch_name;
 
 const props = defineProps({
-    salesreport: Array,
+    salesreport: Object,
     totals: Object,
     branches: Array,
 });
 
-// Reactive state
+// Get user’s branch (used to build the URL)
+const branch = page.props.auth.user.branch_id;
+
+// Filters
 const search = ref("");
 const dateFilterRef = ref(null);
 
-// Build correct history route
-function getHistoryRoute() {
-    if (acct_roles === 3) {
-        return `/supervisor/${branch}/salesreport`;
-    } else if (acct_roles === 2) {
-        return `/administrator/salesreport`;
-    } else {
-        return `/admin/salesreport`;
-    }
-}
-
-// Filter functions
-function filterByDate() {
-    router.get(
-        getHistoryRoute(),
-        {
-            search: search.value,
-            date_from: dateFilterRef.value?.localDateFrom,
-            date_to: dateFilterRef.value?.localDateTo,
-        },
-        {
-            preserveState: true,
-            replace: true,
-        }
-    );
-}
-
-function updateSearch() {
-    router.get(
-        getHistoryRoute(),
-        {
-            search: search.value,
-            date_from: dateFilterRef.value?.localDateFrom,
-            date_to: dateFilterRef.value?.localDateTo,
-        },
-        {
-            preserveState: true,
-            replace: true,
-        }
-    );
-}
-
-// Format date for display
+// Utilities
 const getDate = (date) =>
     new Date(date).toLocaleDateString("en-us", {
         year: "numeric",
@@ -71,62 +33,24 @@ const getDate = (date) =>
         day: "numeric",
     });
 
-const form = ref({
-    branch_id: "",
-});
-router.get(
-    getHistoryRoute(),
-    {
-        ...form.value,
-        search: search.value,
-        date_from: dateFilterRef.value?.localDateFrom,
-        date_to: dateFilterRef.value?.localDateTo,
-    },
-    {
-        preserveScroll: true,
-        preserveState: true,
-        replace: true,
-    }
-);
-
-watch(
-    () => form.value.branch_id,
-    (newBranchId) => {
-        router.get(
-            getHistoryRoute(),
-            {
-                branch_id: newBranchId,
-                search: search.value,
-                date_from: dateFilterRef.value?.localDateFrom,
-                date_to: dateFilterRef.value?.localDateTo,
-            },
-            {
-                preserveScroll: true,
-                preserveState: true,
-                replace: true,
-            }
-        );
-    }
-);
-function deleteSales(sr) {
-    Swal.fire({
-        title: "Are you sure?",
-        text: `This will permanently delete sales: ${sr.description}`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            router.delete(`/admin/salesreport/${sr.id}`, {
-                onSuccess: () => {
-                    Swal.fire("Deleted!", "sales has been deleted.", "success");
-                },
-            });
+// Handlers
+function fetchData() {
+    router.get(
+        `/cashier/${branch}/sales`,
+        {
+            search: search.value,
+            date_from: dateFilterRef.value?.localDateFrom,
+            date_to: dateFilterRef.value?.localDateTo,
+        },
+        {
+            preserveState: true,
+            replace: true,
         }
-    });
+    );
 }
+
+const updateSearch = () => fetchData();
+const filterByDate = () => fetchData();
 </script>
 
 <template>
@@ -148,17 +72,7 @@ function deleteSales(sr) {
                 )}`"
                 barColor="bg-green-500"
             />
-            <CardView
-                v-if="$page.props.auth.user.acct_roles === 1"
-                title="Gross"
-                :value="`₱ ${parseFloat(totals.net_amount || 0).toLocaleString(
-                    undefined,
-                    {
-                        maximumFractionDigits: 0,
-                    }
-                )}`"
-                barColor="bg-blue-500"
-            />
+
             <CardView
                 title="Expenses"
                 :value="`₱ ${parseFloat(
@@ -170,7 +84,9 @@ function deleteSales(sr) {
             />
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow-md w-full overflow-x-auto">
+        <div
+            class="bg-gray-100 p-6 rounded-lg shadow-md w-full overflow-x-auto"
+        >
             <div class="flex flex-wrap items-center gap-4 mb-4">
                 <!-- Search Input -->
                 <input
@@ -179,20 +95,6 @@ function deleteSales(sr) {
                     @input="updateSearch"
                     placeholder="Search..."
                     class="p-2 border rounded-lg w-60 md:w-90"
-                />
-
-                <!-- Branch Selector -->
-                <SelectInput
-                    v-if="[1, 2].includes($page.props.auth.user.acct_roles)"
-                    v-model="form.branch_id"
-                    :options="[
-                        { label: 'All Branches', value: '' },
-                        ...props.branches.map((branch) => ({
-                            label: branch.branch_name,
-                            value: branch.id,
-                        })),
-                    ]"
-                    class="w-48 mt-2"
                 />
 
                 <!-- Date Range + Filter Button -->
@@ -211,12 +113,6 @@ function deleteSales(sr) {
                         Filter
                     </button>
                 </div>
-
-                <!-- Export Button -->
-                <ExportTable
-                    table-id="product-table"
-                    filename="productSales-table.xlsx"
-                />
             </div>
 
             <table
@@ -240,11 +136,7 @@ function deleteSales(sr) {
                         >
                             Account
                         </th>
-                        <th
-                            class="px-4 py-2 text-left text-md font-medium text-gray-800"
-                        >
-                            Branch
-                        </th>
+
                         <th
                             class="px-4 py-2 text-left text-md font-medium text-gray-800"
                         >
@@ -266,16 +158,7 @@ function deleteSales(sr) {
                         >
                             Category
                         </th>
-                        <th
-                            class="px-4 py-2 text-left text-md font-medium text-gray-800"
-                            v-if="
-                                [1, 2].includes(
-                                    $page.props.auth.user.acct_roles
-                                )
-                            "
-                        >
-                            Cost Price
-                        </th>
+
                         <th
                             class="px-4 py-2 text-left text-md font-medium text-gray-800"
                         >
@@ -289,19 +172,7 @@ function deleteSales(sr) {
                         <th
                             class="px-4 py-2 text-left text-md font-medium text-gray-800"
                         >
-                            Sales
-                        </th>
-                        <th
-                            class="px-4 py-2 text-left text-md font-medium text-gray-800"
-                            v-if="$page.props.auth.user.acct_roles === 1"
-                        >
-                            Gross
-                        </th>
-                        <th
-                            class="px-4 py-2 text-left text-md font-medium text-gray-800"
-                            v-if="$page.props.auth.user.acct_roles === 1"
-                        >
-                            Action
+                            Total Sales
                         </th>
                     </tr>
                 </thead>
@@ -326,11 +197,7 @@ function deleteSales(sr) {
                         >
                             {{ sr.account }}
                         </td>
-                        <td
-                            class="px-4 py-2 text-left text-md font-medium text-gray-600"
-                        >
-                            {{ sr.branch_name }}
-                        </td>
+
                         <td
                             class="px-4 py-2 text-left text-md font-medium text-gray-600"
                         >
@@ -367,16 +234,7 @@ function deleteSales(sr) {
                         >
                             {{ sr.product?.category?.category_name }}
                         </td>
-                        <td
-                            class="px-4 py-2 text-left text-md font-medium text-gray-600"
-                            v-if="
-                                [1, 2].includes(
-                                    $page.props.auth.user.acct_roles
-                                )
-                            "
-                        >
-                            {{ parseFloat(sr.cost_price).toLocaleString() }}
-                        </td>
+
                         <td
                             class="px-4 py-2 text-left text-md font-medium text-gray-600"
                         >
@@ -392,20 +250,6 @@ function deleteSales(sr) {
                         >
                             {{ parseFloat(sr.total_price).toLocaleString() }}
                         </td>
-                        <td
-                            class="px-4 py-2 text-left text-md font-medium text-gray-600"
-                            v-if="$page.props.auth.user.acct_roles === 1"
-                        >
-                            {{ parseFloat(sr.net_amount).toLocaleString() }}
-                        </td>
-                        <button
-                            v-if="$page.props.auth.user.acct_roles === 1"
-                            @click="deleteSales(sr)"
-                        >
-                            <TrashIcon
-                                class="w-6 h-6 mt-2 text-red-500 cursor-pointer"
-                            />
-                        </button>
                     </tr>
                 </tbody>
             </table>

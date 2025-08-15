@@ -96,7 +96,7 @@ const invoiceNumer = props.invoiceNumer || generateInvoiceNumber();
         <div class="mb-1">
             <div class="flex justify-between items-start mb-8">
                 <div class="text-center text-2xl -mt-2 font-bold">
-                    3A<br />
+                    A&A<br />
                     MERCHANDISER
                 </div>
                 <div class="text-right text-sm leading-tight">

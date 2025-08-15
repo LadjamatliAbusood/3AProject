@@ -13,7 +13,7 @@ import 'aos/dist/aos.css';
 
 
 createInertiaApp({
-    title: (title) => `3A Merchandiser ${title}`,
+    title: (title) => `A&A Merchandiser ${title}`,
   resolve: name => {
     const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
     let page = pages[`./Pages/${name}.vue`]

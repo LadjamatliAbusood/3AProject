@@ -1,7 +1,6 @@
 <script setup>
 import { ref, watch } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
-
 import PaginationLinks from "../Components/PaginationLink.vue";
 import CashierLayout from "../../Layouts/CashierLayout.vue";
 import { debounce } from "lodash";
@@ -31,7 +30,9 @@ watch(
 <template>
     <Head title=" | View" />
     <div data-aos="fade-up">
-        <div class="bg-white p-6 rounded-lg shadow-md w-full overflow-x-auto">
+        <div
+            class="bg-gray-100 p-6 rounded-lg shadow-md w-full overflow-x-auto"
+        >
             <!-- Search Input -->
             <input
                 type="search"

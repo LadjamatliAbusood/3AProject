@@ -477,10 +477,11 @@ function triggerSale(product, branchProduct) {
                                 >
                                     <img
                                         v-if="product.barcode"
-                                        :src="'/' + product.barcode"
+                                        :src="`/${product.barcode}`"
                                         alt="barcode"
                                         class="h-5"
                                     />
+
                                     <p class="text-md text-left text-gray-700">
                                         {{ product.product_code }}
                                     </p>

@@ -20,10 +20,10 @@ const currentDate = new Date().toLocaleDateString("en-PH", {
 
 <template>
     <div
-        class="w-full max-w-xs mx-auto bg-white text-center font-sans text-sm p-4 border border-gray-300 rounded shadow"
+        class="w-full max-w-xs mx-auto text-center font-sans text-sm p-4 border"
     >
         <h1 class="font-bold text-lg mb-1">RECEIPT</h1>
-        <h2 class="font-bold italic text-base">3A MERCHANDISER</h2>
+        <h2 class="font-bold italic text-base">A&A MERCHANDISER</h2>
         <p class="text-xs">Tomas Claudio St.,<br />Zamboanga City, 7000</p>
 
         <div class="text-left mt-4 text-xs">
@@ -64,6 +64,23 @@ const currentDate = new Date().toLocaleDateString("en-PH", {
             <div class="text-left">Change Cash:</div>
             <div class="text-right">
                 {{ parseFloat(change).toLocaleString() }}
+            </div>
+        </div>
+        <hr class="my-2 border-gray-400" />
+        <h3 class="font-semibold">CUSTOMER INFO</h3>
+
+        <div class="space-y-3 w-full max-w-md">
+            <div class="flex items-center">
+                <span class="text-sm min-w-[95px]">Name:</span>
+                <div class="flex-1 border-b border-gray-400 mt-2"></div>
+            </div>
+            <div class="flex items-center">
+                <span class="text-sm min-w-[95px]">Address:</span>
+                <div class="flex-1 border-b border-gray-400 mt-2"></div>
+            </div>
+            <div class="flex items-center">
+                <span class="text-sm min-w-[95px]">Contact #:</span>
+                <div class="flex-1 border-b border-gray-400 mt-2"></div>
             </div>
         </div>
 
