@@ -79,7 +79,7 @@ const getDate = (date) =>
                             </div>
 
                             <TextInput
-                                name="amount"
+                                name="Amount"
                                 type="number"
                                 v-model="form.amount"
                                 :message="form.errors.amount"
