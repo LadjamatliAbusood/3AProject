@@ -11,11 +11,13 @@ defineEmits(["update:modelValue"]);
 
 <template>
     <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">
+        <label
+            class="block text-sm font-medium text-gray-700 mb-1 dark:text-white"
+        >
             {{ name }}
         </label>
         <select
-            class="form-select w-full rounded-lg border-gray-300 text-lg"
+            class="form-select w-full rounded-lg border-gray-300 text-lg dark:text-white"
             :disabled="disabled"
             :value="modelValue"
             @change="$emit('update:modelValue', $event.target.value)"
