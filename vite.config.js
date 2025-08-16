@@ -13,7 +13,7 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
-    
+    base: process.env.VITE_APP_URL + '/build/',
     resolve:{
     alias:{
       '@':fileURLToPath(new URL("resources/js",import.meta.url))
