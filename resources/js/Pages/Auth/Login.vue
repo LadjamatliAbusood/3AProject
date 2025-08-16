@@ -47,7 +47,7 @@ const submit = () => {
                 A&A Merchandiser
             </div>
             <div
-                class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 dark:text-white"
+                class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0"
             >
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                     <h1
@@ -56,9 +56,7 @@ const submit = () => {
                         Sign in to your account
                     </h1>
 
-                    <div
-                        class="flex items-center justify-center dark:text-white"
-                    >
+                    <div class="flex items-center justify-center">
                         <form
                             @submit.prevent="submit"
                             class="max-w-md w-[300px] flex flex-col mt-2"

@@ -26,12 +26,12 @@ defineProps({
         <div class="mb-2">
             <label
                 for="location"
-                class="block text-sm font-medium text-gray-700 dark:text-white"
+                class="block text-sm font-medium text-gray-700"
                 >{{ name }}</label
             >
             <select
                 v-model="model"
-                class="bg-white border border-gray-600 text-gray-900 font-semibold rounded-lg block w-full p-2.5 dark:text-white"
+                class="bg-white border border-gray-600 text-gray-900 font-semibold rounded-lg block w-full p-2.5"
                 :class="{ 'border-red-500': message }"
                 :disabled="disableSelect"
             >
